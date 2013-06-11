@@ -1,4 +1,90 @@
-sematext-metrics-gem
-====================
+# sematext-metrics gem
 
-Ruby Gem for pushing Custom Metrics into SPM
+Ruby gem for sending [Custom Metrics](https://sematext.atlassian.net/wiki/display/PUBSPM/Custom+Metrics) to [SPM](http://sematext.com/spm/index.html).
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'sematext-metrics'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install sematext-metrics
+
+## Usage
+
+Initialize client:
+
+    Sematext::Metrics.initialize("[token]")
+
+Send datapoint:
+
+    Sematext::Metrics.send(
+      :timestamp => 1370969400767,
+      :name => 'coffee-consumed',
+      :value => 1000,
+      :agg_type => :sum,
+      :filter1 => 'floor=1',
+      :filter2 => 'machine=1'
+    )
+
+Batch sending:
+
+    datapoints = [{
+      :name => 'coffee-consumed', 
+      :value => 10,
+      :agg_type => :sum,
+      :filter1 => 'floor=1',
+      :filter2 => 'machine=1'
+    }, { 
+      :name => 'coffee-consumed',
+      :value => 11,
+      :agg_type => :sum,
+      :filter1 => 'floor=1',
+      :filter2 => 'machine=2'
+    }]
+
+    Sematext::Metrics.send_batch datapoints    
+
+## Configuration
+
+To use different tokens for different applications, use `sync` or `async` factory method to instantiate new client:
+
+    user_metrics = Sematext::Metrics::Client.sync("[elasticseach_app_token]")
+    search_metrics = Sematext::Metrics::Client.sync("[web_app_token]")
+
+    #send data
+    user_metrics.send_batch user_datapoints
+    search_metrics.send_batch search_datapoints
+
+
+## Asynchronous sending
+
+Client can send data asynchronously using `em-http-request` extension for [EventMachine](http://http://rubyeventmachine.com/). 
+In order to use this extension you need add  `em-http-request` gem to your application manually. Make sure, that EventMachine's reactor loop is running:
+
+    Thread.new { EventMachine.run }
+
+Asynchronous data sending can be configured during initialization:
+
+    Sematext::Metrics.initialize("[token]", async=true)
+
+Or use `async` factory method to create client instance:
+
+    client = Sematext::Metrics::Client.async("[token]")
+
+## Further reading
+
+[Wiki page about custom metrics feature](https://sematext.atlassian.net/wiki/display/PUBSPM/Custom+Metrics).
+
+## License
+
+Copyright 2013 Sematext Group, Inc.
+
+Licensed under the Apache License, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+
