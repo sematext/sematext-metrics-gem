@@ -53,7 +53,7 @@ Batch sending:
 
 ## Configuration
 
-To use different tokens for different applications, use `sync` or `async` factory method to instantiate new client:
+To use different tokens for different applications, use `sync` or `async` factory method to instantiate a new client:
 
     user_metrics = Sematext::Metrics::Client.sync("[elasticseach_app_token]")
     search_metrics = Sematext::Metrics::Client.sync("[web_app_token]")
@@ -66,7 +66,7 @@ To use different tokens for different applications, use `sync` or `async` factor
 ## Asynchronous sending
 
 Client can send data asynchronously using `em-http-request` extension for [EventMachine](http://http://rubyeventmachine.com/). 
-In order to use this extension you need add  `em-http-request` gem to your application manually. Make sure, that EventMachine's reactor loop is running:
+In order to use this extension add  `em-http-request` gem to your application manually. Ensure EventMachine's reactor loop is running:
 
     Thread.new { EventMachine.run }
 
@@ -74,13 +74,13 @@ Asynchronous data sending can be configured during initialization:
 
     Sematext::Metrics.initialize("[token]", async=true)
 
-Or use `async` factory method to create client instance:
+Or use `async` factory method to create a client instance:
 
     client = Sematext::Metrics::Client.async("[token]")
 
 ## Further reading
 
-[Wiki page about custom metrics feature](https://sematext.atlassian.net/wiki/display/PUBSPM/Custom+Metrics).
+[SPM Custom Metrics Wiki](https://sematext.atlassian.net/wiki/display/PUBSPM/Custom+Metrics).
 
 ## License
 
