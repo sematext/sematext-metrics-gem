@@ -31,7 +31,7 @@ describe Sematext::Metrics::RawValidator do
       validator.validate(
         :name => 'n' * 256,
         :agg_type => :sum,
-        :filter1 => 'filter',
+        :filter1 => 'filter'
       )
     }.to raise_error
   end
