@@ -1,4 +1,4 @@
-# sematext-metrics gem
+# sematext-metrics gem[![Build Status](https://travis-ci.org/sematext/sematext-metrics-gem.png)](https://travis-ci.org/sematext/sematext-metrics-gem)
 
 Ruby gem for sending [Custom Metrics](https://sematext.atlassian.net/wiki/display/PUBSPM/Custom+Metrics) to [SPM](http://sematext.com/spm/index.html).
 
