@@ -15,24 +15,97 @@
 require "spec_helper"
 
 describe Sematext::Metrics::RawValidator do
-  let(:validator) { Sematext::Metrics::RawValidator }
-
-  it "raises exception when datapoint is invalid" do
+  let(:validator) { Sematext::Metrics::RawValidator.new }
+  
+  it "raises exception when name is not set or empty" do 
     expect {
       validator.validate(
-        :timestamp => 123,
-        :name => 'coffee_consumed',
-        :value => 1234,
-        :agg_type => :unknown
-      )
-    }.to raise_error
-    
-    expect {
-      validator.validate(
-        :name => 'n' * 256,
+        :name => '',
         :agg_type => :sum,
-        :filter1 => 'filter'
+        :value => 42
       )
     }.to raise_error
+
+    expect {
+      validator.validate(
+        :agg_type => :sum,
+        :value => 42
+      )
+    }.to raise_error
+  end
+  
+  it "raises exception when value is not set" do
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum
+      )
+    }.to raise_error
+  end
+
+  it "raises exceptionw when agg_type is not set or invalid" do
+    expect {
+      validator.validate(
+        :name => 'name',
+        :value => 42
+      )
+    }.to raise_error
+    expect {
+      validator.validate(
+        :name => 'name',
+        :value => 42,
+        :agg_type => :invalid
+      )
+    }.to raise_error
+  end
+
+  it "raises exception when name, filter1 or filter2 too log" do
+    expect {
+      validator.validate(
+        :name => 'a' * 256,
+        :agg_type => :sum,
+        :value => 42
+      )
+    }.to raise_error
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum,        
+        :value => 42,
+        :filter1 => 'a' * 256
+      )
+    }.to raise_error
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum,        
+        :value => 42,
+        :filter2 => 'a' * 256
+      )
+    }.to raise_error
+  end
+  
+  it "raises exception when value is not a number" do
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum,        
+        :value => 'foo'
+      )
+    }.to raise_error
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum,
+        :value => 100.2
+      )
+    }.to_not raise_error
+    expect {
+      validator.validate(
+        :name => 'name',
+        :agg_type => :sum,
+        :value => 100
+      )
+    }.to_not raise_error
   end
 end

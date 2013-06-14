@@ -30,6 +30,8 @@ module Sematext
         [:name, :value, :agg_type].each do |field|
           check_obligatory field, datapoint[field]
         end
+        raise "name can't be empty" if datapoint[:name].empty?
+        raise "value should be a number" unless datapoint[:value].kind_of?(Numeric)
         [:name, :filter1, :filter2].each do |field|
           value = datapoint[field]
           check_bounds field, datapoint[field] if value
