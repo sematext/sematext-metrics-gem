@@ -62,6 +62,14 @@ To use different tokens for different applications, use `sync` or `async` factor
     user_metrics.send_batch user_datapoints
     search_metrics.send_batch search_datapoints
 
+To send metrics to on-premises SPM setup you can also configure endpoint url:
+
+    user_metrics = Sematext::Metrics::Client.sync("[token]", "http://spm-receiver.example.com/spm-receiver/custom/receive.raw")
+    search_metrics = Sematext::Metrics::Client.async("[token]", "http://spm-receiver.example.com/spm-receiver/custom/receive.raw")
+
+or
+
+    Sematext::Metrics.initialize("[token]", :receiver_url => "http://spm-receiver.example.com/spm-receiver/custom/receive.raw")
 
 ## Asynchronous sending
 
@@ -72,7 +80,7 @@ In order to use this extension add  `em-http-request` gem to your application ma
 
 Asynchronous data sending can be configured during initialization:
 
-    Sematext::Metrics.initialize("[token]", async=true)
+    Sematext::Metrics.initialize("[token]", :async => true)
 
 Or use `async` factory method to create a client instance:
 

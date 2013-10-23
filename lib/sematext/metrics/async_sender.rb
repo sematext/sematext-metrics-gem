@@ -15,8 +15,10 @@
 module Sematext
   module Metrics
     class AsyncSender
-      def initialize(token)
+      def initialize(token, base_uri, path)
         @token = token
+        @path = path || Settings::RECEIVER_PATH
+        @base_uri = base_uri || Settings::RECEIVER_URI
         if defined?(EventMachine)
           require 'em-http-request'
         end
@@ -26,7 +28,7 @@ module Sematext
         deferrable = EventMachine::DefaultDeferrable.new
 
         post_options = {
-          :path => Settings::RECEIVER_PATH,
+          :path => @path,
           :query => {:token => @token},
           :body => data,
           :head => {
@@ -35,7 +37,7 @@ module Sematext
           }
         }
         
-        http = EventMachine::HttpRequest.new(Settings::RECEIVER_URI).post post_options
+        http = EventMachine::HttpRequest.new(@base_uri).post post_options
         http.errback { 
           deferrable.fail{{:status => :failed}}
         }

@@ -19,9 +19,10 @@ module Sematext
     class SyncSender
       include HTTParty
 
-      def initialize(token)
+      def initialize(token, base_uri, path)
         @token = token
-        self.class.default_options[:base_uri] = Settings::RECEIVER_URI
+        self.class.default_options[:base_uri] = base_uri ||  Settings::RECEIVER_URI
+        @path = path || Settings::RECEIVER_PATH
       end
       
       def send data
@@ -33,7 +34,7 @@ module Sematext
           },
           :body => data
         }
-        response = self.class.post(Settings::RECEIVER_PATH, post_options)
+        response = self.class.post(@path, post_options)
         if response.code == 201
           {:status => :succeed}
         else

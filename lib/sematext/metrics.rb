@@ -21,9 +21,16 @@ require "sematext/metrics/async_sender"
 
 module Sematext
   module Metrics
-    def self.initialize(token, async = false)
+    def self.initialize(token, args = {})
       raise "Token should be defined" unless token
-      @client = async ? Client.async(token) : Client.sync(token)
+
+      opts = { :async => false }
+      if !!args == args
+        opts[:async] = args
+      elsif args.kind_of?(Hash)
+        opts.merge!(args)
+      end
+      @client = opts[:async] ? Client.async(token, opts[:receiver_url]) : Client.sync(token, opts[:receiver_url])
     end
 
     def self.send datapoint
@@ -42,12 +49,20 @@ module Sematext
 
     class Client
       class << self
-        def sync(token)
-          Client.new(SyncSender.new(token))
+        def sync(token, receiver_url = nil)
+          url, path = parse_url(receiver_url) if receiver_url
+          Client.new(SyncSender.new(token, url, path))
         end
         
-        def async(token)
-          Client.new(AsyncSender.new(token))
+        def async(token, receiver_url = nil)
+          url, path = parse_url(receiver_url) if receiver_url
+          Client.new(AsyncSender.new(token, url, path))
+        end
+
+        private
+        def parse_url(url)
+          uri = URI.parse(url)
+          ["#{uri.scheme}://#{uri.host}:#{uri.port}", uri.path]
         end
       end
 
@@ -77,7 +92,7 @@ module Sematext
           @sender.send serialized
         end
       end
-
+      
       def epoch 
         Time.now.to_i * 1000
       end
