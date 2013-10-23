@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sematext-metrics (0.0.1)
+    sematext-metrics (0.0.2)
       httparty (~> 0.11.0)
 
 GEM
@@ -11,9 +11,9 @@ GEM
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
-    multi_json (1.7.6)
-    multi_xml (0.5.4)
-    rake (10.0.4)
+    multi_json (1.8.2)
+    multi_xml (0.5.5)
+    rake (10.1.0)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
